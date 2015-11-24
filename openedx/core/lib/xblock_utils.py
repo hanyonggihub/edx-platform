@@ -5,9 +5,10 @@ Functions that can are used to modify XBlock fragments for use in the LMS and St
 import datetime
 import json
 import logging
+import markupsafe
+import re
 import static_replace
 import uuid
-import markupsafe
 from lxml import html, etree
 from contracts import contract
 
@@ -211,6 +212,12 @@ def grade_histogram(module_id):
     return grades
 
 
+def sanitize_html_id(html_id):
+    """Template uses element_id in js function names, so can't allow dashes and colons"""
+    sanitized_html_id = re.sub(r'[:-]', '_', html_id)
+    return sanitized_html_id
+
+
 @contract(user=User, has_instructor_access=bool, block=XBlock, view=basestring, frag=Fragment, context="dict|None")
 def add_staff_markup(user, has_instructor_access, disable_staff_debug_info, block, view, frag, context):  # pylint: disable=unused-argument
     """
@@ -298,8 +305,7 @@ def add_staff_markup(user, has_instructor_access, disable_staff_debug_info, bloc
         'source_file': source_file,
         'source_url': '%s/%s/tree/master/%s' % (giturl, data_dir, source_file),
         'category': str(block.__class__.__name__),
-        # Template uses element_id in js function names, so can't allow dashes
-        'element_id': block.location.html_id().replace('-', '_'),
+        'element_id': sanitize_html_id(block.location.html_id()),
         'edit_link': edit_link,
         'user': user,
         'xqa_server': settings.FEATURES.get('XQA_SERVER', "http://your_xqa_server.com"),

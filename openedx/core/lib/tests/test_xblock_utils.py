@@ -1,30 +1,21 @@
 """
 Tests for xblock_utils.py
 """
+from __future__ import unicode_literals, absolute_import
+
 import ddt
 import uuid
-from unittest import TestCase
-from xblock.fragment import Fragment
+
+from django.conf import settings
 from django.test.client import RequestFactory
-from xblock.core import XBlock
-from xmodule.x_module import XModule, XModuleDescriptor
-from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
-from xmodule.modulestore.tests.factories import CourseFactory, ItemFactory, LibraryFactory
+
+from courseware.models import StudentModule  # pylint: disable=import-error
 from lms.djangoapps.lms_xblock.runtime import quote_slashes
 from opaque_keys.edx.keys import CourseKey
-from courseware.models import StudentModule
-from student.tests.factories import UserFactory
-
-
-from xmodule.modulestore.django import modulestore
-from xmodule.contentstore.django import contentstore
+from xblock.fragment import Fragment
 from xmodule.modulestore import ModuleStoreEnum
-from xmodule.modulestore.xml_importer import import_course_from_xml
-from django.conf import settings
-from opaque_keys.edx.locations import SlashSeparatedCourseKey
-
-TEST_DATA_DIR = settings.COMMON_TEST_DATA_ROOT
-
+from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
+from xmodule.modulestore.tests.factories import CourseFactory
 
 from openedx.core.lib.xblock_utils import (
     wrap_fragment,
@@ -34,25 +25,37 @@ from openedx.core.lib.xblock_utils import (
     replace_course_urls,
     replace_static_urls,
     grade_histogram,
-    add_staff_markup
+    sanitize_html_id
 )
 
+COURSE_KEY = CourseKey.from_string('TestX/TS01/2015')
+TEST_DATA_DIR = settings.COMMON_TEST_DATA_ROOT
 
+
+@ddt.ddt
 class TestXblockUtils(ModuleStoreTestCase):
+    """Tests for xblock utility functions."""
+
+    def create_fragment(self, content=None):
+        """Create a fragment."""
+        fragment = Fragment(content)
+        fragment.add_css('body {background-color:red;}')
+        fragment.add_javascript('alert("Hi!");')
+        return fragment
 
     def test_wrap_fragment(self):
-        new_content = u'<p>New Content<p>'
-        fragment = Fragment()
-        fragment.add_css(u'body {background-color:red;}')
-        fragment.add_javascript(u'alert("Hi!");')
+        """Verify that wrap_fragment adds new content."""
+        new_content = '<p>New Content<p>'
+        fragment = self.create_fragment()
         wrapped_fragment = wrap_fragment(fragment, new_content)
-        self.assertEqual(u'<p>New Content<p>', wrapped_fragment.content)
-        self.assertEqual(u'body {background-color:red;}', wrapped_fragment.resources[0].data)
-        self.assertEqual(u'alert("Hi!");', wrapped_fragment.resources[1].data)
+        self.assertEqual('<p>New Content<p>', wrapped_fragment.content)
+        self.assertEqual('body {background-color:red;}', wrapped_fragment.resources[0].data)
+        self.assertEqual('alert("Hi!");', wrapped_fragment.resources[1].data)
 
     def test_request_token(self):
+        """Verify that a proper token is returned."""
         request_with_token = RequestFactory().get('/')
-        request_with_token._xblock_token = '123'
+        request_with_token._xblock_token = '123'  # pylint: disable=protected-access
         token = request_token(request_with_token)
         self.assertEqual(token, '123')
 
@@ -62,11 +65,9 @@ class TestXblockUtils(ModuleStoreTestCase):
         test_uuid = uuid.UUID(token, version=1)
         self.assertEqual(token, test_uuid.hex)
 
-    def test_wrap_xblock(self):
-        fragment = Fragment(u"<h1>Test!</h1>")
-        fragment.add_css(u'body {background-color:red;}')
-        fragment.add_javascript('alert("Test!");')
-
+    @ddt.data(ModuleStoreEnum.Type.mongo, ModuleStoreEnum.Type.split)
+    def test_wrap_xblock(self, store):  # pylint: disable=unused-argument
+        fragment = self.create_fragment(u"<h1>Test!</h1>")
         test_course = CourseFactory.create(
             org='TestX',
             number='TS01',
@@ -88,55 +89,55 @@ class TestXblockUtils(ModuleStoreTestCase):
         self.assertIn('data-usage-id="i4x:;_;_TestX;_TS01;_course;_2015"', test_wrap_output.content)
         self.assertIn('<h1>Test!</h1>', test_wrap_output.content)
         self.assertEqual(test_wrap_output.resources[0].data, u'body {background-color:red;}')
-        self.assertEqual(test_wrap_output.resources[1].data, 'alert("Test!");')
+        self.assertEqual(test_wrap_output.resources[1].data, 'alert("Hi!");')
 
-    def test_replace_jump_to_id_urls(self):
-        test_course = CourseKey.from_string('TestX/TS01/2015')
+    @ddt.data(ModuleStoreEnum.Type.mongo, ModuleStoreEnum.Type.split)
+    def test_replace_jump_to_id_urls(self, store):  # pylint: disable=unused-argument
         test_replace = replace_jump_to_id_urls(
-            course_id=CourseKey.from_string('TestX/TS01/2015'), 
-            jump_to_id_base_url=u'/base_url/',
+            course_id=COURSE_KEY,
+            jump_to_id_base_url='/base_url/',
             block=CourseFactory.create(),
             view='baseview',
-            frag=Fragment(u'<a href="/jump_to_id/id">'),
+            frag=Fragment('<a href="/jump_to_id/id">'),
             context=None
         )
         self.assertIsInstance(test_replace, Fragment)
-        self.assertEqual(test_replace.content, u'<a href="/base_url/id">')
+        self.assertEqual(test_replace.content, '<a href="/base_url/id">')
 
-    def test_replace_course_urls(self):
-        test_course = CourseKey.from_string('TestX/TS01/2015')
+    @ddt.data(ModuleStoreEnum.Type.mongo, ModuleStoreEnum.Type.split)
+    def test_replace_course_urls(self, store):  # pylint: disable=unused-argument
         test_replace = replace_course_urls(
-            course_id=test_course, 
+            course_id=COURSE_KEY,
             block=CourseFactory.create(),
             view='baseview',
-            frag=Fragment(u'<a href="/course/id">'),
+            frag=Fragment('<a href="/course/id">'),
             context=None
         )
         self.assertIsInstance(test_replace, Fragment)
-        self.assertEqual(test_replace.content, u'<a href="/courses/TestX/TS01/2015/id">')
+        self.assertEqual(test_replace.content, '<a href="/courses/TestX/TS01/2015/id">')
 
-    def test_replace_static_urls(self):
-        test_course = CourseKey.from_string('TestX/TS01/2015')
+    @ddt.data(ModuleStoreEnum.Type.mongo, ModuleStoreEnum.Type.split)
+    def test_replace_static_urls(self, store):  # pylint: disable=unused-argument
         test_replace = replace_static_urls(
             data_dir=None,
-            course_id=test_course, 
+            course_id=COURSE_KEY,
             block=CourseFactory.create(),
             view='baseview',
-            frag=Fragment(u'<a href="/static/id">'),
+            frag=Fragment('<a href="/static/id">'),
             context=None
         )
         self.assertIsInstance(test_replace, Fragment)
-        self.assertEqual(test_replace.content, u'<a href="/c4x/TestX/TS01/asset/id">')
+        self.assertEqual(test_replace.content, '<a href="/c4x/TestX/TS01/asset/id">')
 
-    def test_grade_histogram(self):
-        test_course = CourseKey.from_string('TestX/TS01/2015')
-        usage_key = test_course.make_usage_key('problem', 'first_problem')
-        new_grade = StudentModule.objects.create(
+    @ddt.data(ModuleStoreEnum.Type.mongo, ModuleStoreEnum.Type.split)
+    def test_grade_histogram(self, store):  # pylint: disable=unused-argument
+        usage_key = COURSE_KEY.make_usage_key('problem', 'first_problem')
+        StudentModule.objects.create(
             student_id=1,
             grade=100,
             module_state_key=usage_key
         )
-        new_grade = StudentModule.objects.create(
+        StudentModule.objects.create(
             student_id=2,
             grade=50,
             module_state_key=usage_key
@@ -146,57 +147,9 @@ class TestXblockUtils(ModuleStoreTestCase):
         self.assertEqual(grades[0], (50.0, 1))
         self.assertEqual(grades[1], (100.0, 1))
 
-    def test_add_staff_markup(self):
-        block = CourseFactory.create()
-        block.location.block_id = 'test-test'
-        self.assertEqual(block.location.__dict__, 1)
-        output = add_staff_markup(
-            user=UserFactory(),
-            has_instructor_access=True,
-            disable_staff_debug_info=False,
-            block=CourseFactory.create(),
-            view='baseview',
-            frag=Fragment(u"<h1>Test!</h1>"),
-            context=None
-        )  # pylint: disable=unused-argument
-        
-        self.assertEqual(output.__dict__, 1)
+    def test_sanitize_html_id(self):
+        """Verify that colon and dash are replaced."""
+        dirty_string = 'I:have-un:allowed_characters'
+        clean_string = sanitize_html_id(dirty_string)
 
-    def test_get_course_update_items(self):
-        pass
-
-
-class AddStaffMarkup(ModuleStoreTestCase):
-
-    def setUp(self):
-        super(ExportAllCourses, self).setUp()
-
-        self.content_store = contentstore()
-        # pylint: disable=protected-access
-        self.module_store = modulestore()._get_modulestore_by_type(ModuleStoreEnum.Type.mongo)
-
-    def test_add_staff_markup(self):
-        import_course_from_xml(
-            self.module_store,
-            '**replace_user**',
-            TEST_DATA_DIR,
-            ['problem-colon_id'],
-            static_content_store=self.content_store,
-            do_import_static=True,
-            verbose=False
-        )
-
-        course = self.module_store.get_course(SlashSeparatedCourseKey('org', 'problem-colon_id', 'problem-colon_id'))
-        block = course.get_children()[0]
-        
-        output = add_staff_markup(
-            user=UserFactory(),
-            has_instructor_access=True,
-            disable_staff_debug_info=False,
-            block=block,
-            view='baseview',
-            frag=Fragment(u"<h1>Test!</h1>"),
-            context=None
-        )  # pylint: disable=unused-argument
-        
-        self.assertEqual(output.__dict__, 1)
+        self.assertEqual(clean_string, 'I_have_un_allowed_characters')
