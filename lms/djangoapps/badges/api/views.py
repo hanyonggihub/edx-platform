@@ -3,11 +3,14 @@ API views for badges
 """
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.exceptions import APIException
+from rest_framework.response import Response
 
-from badges.models import BadgeAssertion
 from openedx.core.lib.api.view_utils import view_auth_classes
+from badges.models import BadgeAssertion
+from openedx.core.djangoapps.user_api.accounts.api import get_account_settings
+from openedx.core.djangoapps.user_api.errors import UserNotFound
 from .serializers import BadgeAssertionSerializer
 from xmodule_django.models import CourseKeyField
 
@@ -89,6 +92,19 @@ class UserBadgeAssertions(generics.ListAPIView):
         }
     """
     serializer_class = BadgeAssertionSerializer
+
+    def get(self, request, **kwargs):
+        """
+        We don't want to deliver this if the user's profile isn't public.
+        """
+        try:
+            account_settings = get_account_settings(request, kwargs['username'], view=request.query_params.get('view'))
+        except UserNotFound:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if 'badges' not in account_settings:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        return super(UserBadgeAssertions, self).get(request, **kwargs)
 
     def get_queryset(self):
         """
