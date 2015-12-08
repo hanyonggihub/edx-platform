@@ -291,7 +291,7 @@ class MongoConnection(object):
         self.database = connect_to_mongodb(
             db, host,
             port=port, tz_aware=tz_aware, user=user, password=password,
-            retry_wait_time=retry_wait_time, **kwargs
+            retry_wait_time=retry_wait_time, try_secondary_read=True, **kwargs
         )
 
         self.course_index = self.database[collection + '.active_versions']
