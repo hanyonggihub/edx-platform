@@ -560,7 +560,7 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             Create & open the connection, authenticate, and provide pointers to the collection
             """
             self.database = connect_to_mongodb(
-                db, collection, host,
+                db, host,
                 port=port, tz_aware=tz_aware, user=user, password=password,
                 retry_wait_time=retry_wait_time, **kwargs
             )

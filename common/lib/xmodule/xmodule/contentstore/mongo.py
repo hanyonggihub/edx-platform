@@ -23,10 +23,11 @@ class MongoContentStore(ContentStore):
     """
     MongoDB-backed ContentStore.
     """
-    # pylint: disable=unused-argument
-    def __init__(self, host, db,
-                 port=27017, tz_aware=True, user=None, password=None, bucket='fs', collection=None, **kwargs
-                 ):  # pylint: disable=bad-continuation
+    # pylint: disable=unused-argument, bad-continuation
+    def __init__(
+        self, host, db,
+        port=27017, tz_aware=True, user=None, password=None, bucket='fs', collection=None, **kwargs
+    ):
         """
         Establish the connection with the mongo backend and connect to the collections
 
@@ -37,7 +38,7 @@ class MongoContentStore(ContentStore):
         # the AutoReconnect errors.
         proxy = False
         mongo_db = connect_to_mongodb(
-            db, collection, host,
+            db, host,
             port=port, tz_aware=tz_aware, user=user, password=password, proxy=proxy, **kwargs
         )
 

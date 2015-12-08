@@ -289,7 +289,7 @@ class MongoConnection(object):
         Create & open the connection, authenticate, and provide pointers to the collections
         """
         self.database = connect_to_mongodb(
-            db, collection, host,
+            db, host,
             port=port, tz_aware=tz_aware, user=user, password=password,
             retry_wait_time=retry_wait_time, **kwargs
         )

@@ -5,11 +5,12 @@ import pymongo
 from mongodb_proxy import MongoProxy
 
 
-# pylint: disable=unused-argument
-def connect_to_mongodb(db, collection, host,
-                       port=27017, tz_aware=True, user=None, password=None,
-                       retry_wait_time=0.1, proxy=True, **kwargs
-                       ):  # pylint: disable=bad-continuation
+# pylint: disable=bad-continuation
+def connect_to_mongodb(
+    db, host,
+    port=27017, tz_aware=True, user=None, password=None,
+    retry_wait_time=0.1, proxy=True, **kwargs
+):
     """
     Returns a MongoDB Database connection, optionally wrapped in a proxy. The proxy
     handles AutoReconnect errors by retrying read operations, since these exceptions
