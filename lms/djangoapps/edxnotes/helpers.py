@@ -10,7 +10,7 @@ from uuid import uuid4
 import requests
 from datetime import datetime
 from dateutil.parser import parse as dateutil_parse
-from opaque_keys.edx.keys import UsageKey
+from opaque_keys.edx.keys import UsageKey, CourseKey
 from requests.exceptions import RequestException
 
 from django.conf import settings
@@ -25,6 +25,7 @@ from courseware.access import has_access
 from openedx.core.lib.token_utils import get_id_token
 from student.models import anonymous_id_for_user
 from util.date_utils import get_default_time_display
+from util.json_request import JsonResponse, JsonResponseBadRequest
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
@@ -34,6 +35,8 @@ HIGHLIGHT_TAG = "span"
 HIGHLIGHT_CLASS = "note-highlight"
 # OAuth2 Client name for edxnotes
 CLIENT_NAME = "edx-notes"
+DEFAULT_PAGE = 1
+DEFAULT_PAGE_SIZE = 10
 
 
 class NoteJSONEncoder(JSONEncoder):
@@ -63,7 +66,7 @@ def get_token_url(course_id):
     })
 
 
-def send_request(user, course_id, path="", query_string=None):
+def send_request(user, course_id, page, page_size, path="", query_string=None):
     """
     Sends a request with appropriate parameters and headers.
     """
@@ -71,6 +74,8 @@ def send_request(user, course_id, path="", query_string=None):
     params = {
         "user": anonymous_id_for_user(user, None),
         "course_id": unicode(course_id).encode("utf-8"),
+        "page": page,
+        "page_size": page_size,
     }
 
     if query_string:
@@ -239,39 +244,21 @@ def get_index(usage_key, children):
     return children.index(usage_key)
 
 
-def search(user, course, query_string):
+def get_notes(user, course, path='annotations', page=1, page_size=10, query_string=None):
     """
-    Returns search results for the `query_string(str)`.
+    Returns paginated list of notes for the user.
     """
-    response = send_request(user, course.id, "search", query_string)
-    try:
-        content = json.loads(response.content)
-        collection = content["rows"]
-    except (ValueError, KeyError):
-        log.warning("invalid JSON: %s", response.content)
-        raise EdxNotesParseError(_("Server error. Please try again in a few minutes."))
+    response = send_request(user, course.id, page, page_size, path, query_string)
 
-    content.update({
-        "rows": preprocess_collection(user, course, collection)
-    })
-
-    return json.dumps(content, cls=NoteJSONEncoder)
-
-
-def get_notes(user, course):
-    """
-    Returns all notes for the user.
-    """
-    response = send_request(user, course.id, "annotations")
     try:
         collection = json.loads(response.content)
     except ValueError:
-        return None
+        raise EdxNotesParseError(_("Bad Response."))
 
-    if not collection:
-        return None
+    filtered_results = preprocess_collection(user, course, collection['results'])
+    collection['results'] = filtered_results
 
-    return json.dumps(preprocess_collection(user, course, collection), cls=NoteJSONEncoder)
+    return json.dumps(collection, cls=NoteJSONEncoder)
 
 
 def get_endpoint(api_url, path=""):
