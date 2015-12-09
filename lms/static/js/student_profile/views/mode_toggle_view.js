@@ -10,6 +10,7 @@
                     var self = this;
                     this.profile = options.profile;  // JQuery Selector
                     this.badges = options.badges;  // Backbone View
+                    this.raw_badges = options.raw_badges; // JSON output of badges field from server.
                     this.sections = $([this.profile[0], this.badges.el]);
                     this.profile_toggle = $('.profile-toggle');
                     this.accomplishments_toggle = $('.accomplishments-toggle');
@@ -24,8 +25,8 @@
                     this.accomplishments_toggle.click({'section': this.badges.$el}, setToggle);
                 },
                 render: function () {
-                    if (this.badges.collection.size() === 0) {
-                        // No badges, therefore nothing to show.
+                    if (this.raw_badges === null) {
+                        // Badges disabled, nothing to show.
                         return this;
                     }
                     this.badges.$el.hide();

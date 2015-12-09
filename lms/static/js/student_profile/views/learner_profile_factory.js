@@ -177,7 +177,8 @@
             var modeToggleView = new ModeToggleView({
                 'el': $('.wrapper-toggle'),
                 'badges': badgeListingView,
-                'profile': $('.wrapper-profile-section-two')
+                'profile': $('.wrapper-profile-section-two'),
+                'raw_badges': options.account_settings_data.badges
             });
 
             modeToggleView.render();

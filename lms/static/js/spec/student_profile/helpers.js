@@ -113,10 +113,14 @@ define(['underscore'], function(_) {
         expect(modeToggleView.$el.hasClass('is-hidden')).toBe(false);
     };
 
-    var expectBadgesDisplayed = function(badgeListingView, learnerProfileView) {
+    var expectBadgesDisplayed = function(badgeListingView, learnerProfileView, empty) {
         expect(learnerProfileView.$el.find('.wrapper-profile-section-two').is(':visible')).toBe(false);
         expect(badgeListingView.$el.is(':visible')).toBe(true);
-        expect(badgeListingView.$el.find('.badge-display').length).toBe(4);
+        if (empty) {
+            expect(badgeListingView.$el.find('.badge-display').length).toBe(1);
+        } else {
+            expect(badgeListingView.$el.find('.badge-display').length).toBe(4);
+        }
         expect(badgeListingView.$el.find('.find-button-container').length).toBe(1);
     };
 

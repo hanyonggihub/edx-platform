@@ -5,7 +5,6 @@
         var BadgesCollection = Backbone.Collection.extend({
             model : BadgesModel,
             parse: function(response) {
-                console.log(response);
                 return response.results;
             }
         });
