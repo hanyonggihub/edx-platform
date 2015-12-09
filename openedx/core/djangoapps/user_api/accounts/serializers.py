@@ -65,7 +65,6 @@ class UserReadOnlySerializer(serializers.Serializer):
         :return: Dict serialized account
         """
         profile = user.profile
-
         badges = settings.FEATURES.get('ENABLE_OPENBADGES') or []
         badges = badges and BadgeAssertionSerializer(
             user.badgeassertion_set.all(),

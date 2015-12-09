@@ -112,7 +112,7 @@ class UserAPITestCase(APITestCase):
         legacy_profile.language_proficiencies.add(LanguageProficiency(code='en'))
         legacy_profile.save()
         for dummy in range(3):
-            BadgeAssertionFactory.create()
+            BadgeAssertionFactory.create(user=self.user)
 
 
 @ddt.ddt
