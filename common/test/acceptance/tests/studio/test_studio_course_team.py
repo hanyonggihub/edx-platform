@@ -169,6 +169,7 @@ class CourseTeamPageTest(StudioCourseTest):
         self.page.add_user_to_course(self.other_user.get('email'))
         self._assert_user_present(self.other_user, present=True)
         self.page.delete_user_from_course(self.other_user.get('email'))
+        self.page.wait_for_page()
         self._assert_user_present(self.other_user, present=False)
 
         self.log_in(self.other_user)
