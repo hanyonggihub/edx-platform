@@ -484,7 +484,10 @@ class CourseOverview(TimeStampedModel):
             # Or pass True for force_reseeding.
             course_overviews = CourseOverview.objects.all()
             if org:
-                course_overviews = course_overviews.filter(org=org)
+                # In rare cases, courses belonging to the same org may be accidentally assigned
+                # an org code with a different casing. Case-insensitive exact matching allows us
+                # to deal with this kind of dirty data.
+                course_overviews = course_overviews.filter(org__iexact=org)
 
         return course_overviews
 
