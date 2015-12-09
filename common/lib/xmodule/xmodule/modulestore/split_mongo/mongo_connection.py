@@ -288,6 +288,10 @@ class MongoConnection(object):
         """
         Create & open the connection, authenticate, and provide pointers to the collections
         """
+        # Set a write concern of 1, which makes writes complete successfully to the primary
+        # only before returning. Also makes pymongo report write errors.
+        kwargs['w'] = 1
+
         self.database = connect_to_mongodb(
             db, host,
             port=port, tz_aware=tz_aware, user=user, password=password,
@@ -297,14 +301,6 @@ class MongoConnection(object):
         self.course_index = self.database[collection + '.active_versions']
         self.structures = self.database[collection + '.structures']
         self.definitions = self.database[collection + '.definitions']
-
-        # every app has write access to the db (v having a flag to indicate r/o v write)
-        # Force mongo to report errors, at the expense of performance
-        # pymongo docs suck but explanation:
-        # http://api.mongodb.org/java/2.10.1/com/mongodb/WriteConcern.html
-        self.course_index.write_concern = {'w': 1}
-        self.structures.write_concern = {'w': 1}
-        self.definitions.write_concern = {'w': 1}
 
     def heartbeat(self):
         """

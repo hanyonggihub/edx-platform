@@ -559,6 +559,10 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             """
             Create & open the connection, authenticate, and provide pointers to the collection
             """
+            # Set a write concern of 1, which makes writes complete successfully to the primary
+            # only before returning. Also makes pymongo report write errors.
+            kwargs['w'] = 1
+
             self.database = connect_to_mongodb(
                 db, host,
                 port=port, tz_aware=tz_aware, user=user, password=password,
@@ -573,9 +577,6 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             self.asset_collection = self.database[asset_collection]
 
         do_connection(**doc_store_config)
-
-        # Force mongo to report errors, at the expense of performance
-        self.collection.write_concern = {'w': 1}
 
         if default_class is not None:
             module_path, _, class_name = default_class.rpartition('.')
@@ -1063,7 +1064,7 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
                     course_query[key] = re.compile(r"(?i)^{}$".format(course_query[key]))
         else:
             course_query = {'_id': location.to_deprecated_son()}
-        course = self.collection.find_one(course_query, fields={'_id': True})
+        course = self.collection.find_one(course_query)
         if course:
             return SlashSeparatedCourseKey(course['_id']['org'], course['_id']['course'], course['_id']['name'])
         else:
@@ -1224,7 +1225,7 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             ('_id.course', re.compile(u'^{}$'.format(course_id.course), re.IGNORECASE)),
             ('_id.category', 'course'),
         ])
-        courses = self.collection.find(course_search_location, fields=('_id'))
+        courses = self.collection.find(course_search_location)
         if courses.count() > 0:
             raise DuplicateCourseError(course_id, courses[0]['_id'])
 
