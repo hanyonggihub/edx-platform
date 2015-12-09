@@ -1,3 +1,6 @@
+"""
+Serializers for badging
+"""
 from rest_framework import serializers
 
 from badges.models import BadgeClass, BadgeAssertion

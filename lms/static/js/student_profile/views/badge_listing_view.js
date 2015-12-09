@@ -13,17 +13,18 @@
                     var grid = $('<div class="badge-set-display">');
                     var row;
                     this.collection.each(function (badge, index, collection) {
-                        if (! (index % 2) ) {
+                        var keep_row = (index % 2);
+                        if (!keep_row) {
                             row = $("<div class='badge-row'>");
-                            grid.append(row)
+                            grid.append(row);
                         }
                         row.append(new BadgeView({model: badge}).render().el);
-                        if ((index + 1) == collection.length) {
+                        if ((index + 1) === collection.length) {
                             if (index % 2) {
                                 row = $("<div class='badge-row'>");
-                                grid.append(row)
+                                grid.append(row);
                             }
-                            row.append(_.template(badgePlaceholder,  {'find_courses_url': this.find_courses_url}))
+                            row.append(_.template(badgePlaceholder,  {'find_courses_url': this.find_courses_url}));
                         }
                     }, this);
                     this.$el.html(grid);

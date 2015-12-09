@@ -9,7 +9,9 @@
                     'class': 'badge-display'
                 },
                 render: function () {
-                    var context = _.extend(this.model.toJSON(), {'created_at': Moment(this.model.toJSON()['created_at'])});
+                    var context = _.extend(this.model.toJSON(), {
+                        'created_at': new Moment(this.model.toJSON().created_at)
+                    });
                     this.$el.html(_.template(badgeTemplate, context));
                     return this;
                 }
