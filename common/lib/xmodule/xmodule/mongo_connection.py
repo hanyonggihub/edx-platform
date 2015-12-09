@@ -9,7 +9,7 @@ from mongodb_proxy import MongoProxy
 def connect_to_mongodb(
     db, host,
     port=27017, tz_aware=True, user=None, password=None,
-    retry_wait_time=0.1, proxy=True, try_secondary_read=False, **kwargs
+    retry_wait_time=0.1, proxy=True, **kwargs
 ):
     """
     Returns a MongoDB Database connection, optionally wrapped in a proxy. The proxy
@@ -19,14 +19,14 @@ def connect_to_mongodb(
     # The MongoReplicaSetClient class is deprecated in Mongo 3.x, in favor of using
     # the MongoClient class for all connections. Update/simplify this code when using
     # PyMongo 3.x.
-    replicaset = kwargs.get('replicaSet', None)
-    if try_secondary_read and replicaset:
+    if kwargs.get('replicaSet'):
         # Enable reading from secondary nodes in the MongoDB replicaset by using the
         # MongoReplicaSetClient class.
         # The 'replicaSet' parameter in kwargs is required for secondary reads.
         # The read_preference should be set to a proper value, like SECONDARY_PREFERRED.
         mongo_client_class = pymongo.MongoReplicaSetClient
     else:
+        # No 'replicaSet' in kwargs - so no secondary reads.
         mongo_client_class = pymongo.MongoClient
 
     mongo_conn = pymongo.database.Database(

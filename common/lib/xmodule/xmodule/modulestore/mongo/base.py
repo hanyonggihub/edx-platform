@@ -562,7 +562,7 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             self.database = connect_to_mongodb(
                 db, host,
                 port=port, tz_aware=tz_aware, user=user, password=password,
-                retry_wait_time=retry_wait_time, try_secondary_read=True, **kwargs
+                retry_wait_time=retry_wait_time, **kwargs
             )
 
             self.collection = self.database[collection]
