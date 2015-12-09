@@ -105,9 +105,74 @@ define(['underscore'], function(_) {
         expect(learnerProfileView.$('.wrapper-profile-section-two').length).toBe(0);
     };
 
+    var expectModeToggleToBeHidden = function(modeToggleView) {
+        expect(modeToggleView.$el.hasClass('is-hidden')).toBe(true);
+    };
+
+    var expectModeToggleToBeShown = function(modeToggleView) {
+        expect(modeToggleView.$el.hasClass('is-hidden')).toBe(false);
+    };
+
+    var expectBadgesDisplayed = function(badgeListingView, learnerProfileView) {
+        expect(learnerProfileView.$el.find('.wrapper-profile-section-two').is(':visible')).toBe(false);
+        expect(badgeListingView.$el.is(':visible')).toBe(true);
+        expect(badgeListingView.$el.find('.badge-display').length).toBe(4);
+        expect(badgeListingView.$el.find('.find-button-container').length).toBe(1);
+    };
+
+    var expectBadgesHidden = function(badgeListingView, learnerProfileView) {
+        expect(badgeListingView.$el.is(':visible')).toBe(false);
+        expect(learnerProfileView.$el.find('.wrapper-profile-section-two').is(':visible')).toBe(true);
+    };
+
+    var exampleBadges = [{
+        "user": "http://localhost:8000/api/mobile/v0.5/users/honor",
+            "badge_class": {
+                "slug": "test_slug_0_0753941808621",
+                "issuing_component": "test_component",
+                "display_name": "Test Badge",
+                "course_id": null,
+                "description": "Yay! It's a test badge.",
+                "criteria": "https://example.com/syllabus",
+                "image": "http://localhost:8000/media/badge_classes/test_lMB9bRw.png"
+            },
+            "image_url": "http://example.com/image.png",
+            "assertion_url": "http://example.com/example.json",
+            "created_at": "2015-12-03T16:25:57.676113Z"
+        }, {"user": "http://localhost:8000/api/mobile/v0.5/users/honor",
+            "badge_class": {
+                "slug": "test_slug_0_978058171531",
+                "issuing_component": "test_component",
+                "display_name": "Test Badge",
+                "course_id": null,
+                "description": "Yay! It's a test badge.",
+                "criteria": "https://example.com/syllabus",
+                "image": "http://localhost:8000/media/badge_classes/test_YMRswqm.png"
+            },
+            "image_url": "http://example.com/image.png",
+            "assertion_url": "http://example.com/example.json",
+            "created_at": "2015-12-03T16:25:58.904203Z"
+        }, {"user": "http://localhost:8000/api/mobile/v0.5/users/honor",
+            "badge_class": {
+                "slug": "test_slug_0_851200237578",
+                "issuing_component": "test_component",
+                "display_name": "Test Badge",
+                "course_id": null,
+                "description": "Yay! It's a test badge.",
+                "criteria": "https://example.com/syllabus",
+                "image": "http://localhost:8000/media/badge_classes/test_Z4sKJDu.png"
+            },
+            "image_url": "http://example.com/image.png",
+            "assertion_url": "http://example.com/example.json",
+            "created_at": "2015-12-03T16:25:59.316850Z"
+    }];
+
     return {
         expectLimitedProfileSectionsAndFieldsToBeRendered: expectLimitedProfileSectionsAndFieldsToBeRendered,
         expectProfileSectionsAndFieldsToBeRendered: expectProfileSectionsAndFieldsToBeRendered,
-        expectProfileSectionsNotToBeRendered: expectProfileSectionsNotToBeRendered
+        expectProfileSectionsNotToBeRendered: expectProfileSectionsNotToBeRendered,
+        expectModeToggleToBeHidden: expectModeToggleToBeHidden, expectModeToggleToBeShown: expectModeToggleToBeShown,
+        expectBadgesDisplayed: expectBadgesDisplayed, expectBadgesHidden: expectBadgesHidden,
+        exampleBadges: exampleBadges
     };
 });

@@ -26,7 +26,6 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
                 return new LearnerProfilePage({
                     'accounts_api_url': Helpers.USER_ACCOUNTS_API_URL,
                     'preferences_api_url': Helpers.USER_PREFERENCES_API_URL,
-                    'badges_api_url': Helpers.BADGES_API_URL,
                     'own_profile': ownProfile,
                     'account_settings_page_url': Helpers.USER_ACCOUNTS_API_URL,
                     'country_options': Helpers.FIELD_OPTIONS,
@@ -61,6 +60,33 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
                     learnerProfileView = context.learnerProfileView;
 
                 LearnerProfileHelpers.expectLimitedProfileSectionsAndFieldsToBeRendered(learnerProfileView);
+            });
+
+            it("doesn't render the mode toggle if there are no badges", function() {
+                var context = createProfilePage(true, {badges: []}),
+                    modeToggleView = context.modeToggleView;
+
+                LearnerProfileHelpers.expectModeToggleToBeHidden(modeToggleView);
+            });
+
+            it("renders the mode toggle if there are badges", function() {
+                var context = createProfilePage(true, {badges: LearnerProfileHelpers.exampleBadges}),
+                    modeToggleView = context.modeToggleView;
+
+                LearnerProfileHelpers.expectModeToggleToBeShown(modeToggleView);
+            });
+
+            it("displays the badges when the accomplishments toggle is selected", function () {
+                var context = createProfilePage(true, {badges: LearnerProfileHelpers.exampleBadges}),
+                    learnerProfileView = context.learnerProfileView,
+                    modeToggleView = context.modeToggleView,
+                    badgeListingView = context.badgeListingView;
+
+
+                modeToggleView.$el.find('.accomplishments-toggle').click();
+                LearnerProfileHelpers.expectBadgesDisplayed(badgeListingView, learnerProfileView);
+                modeToggleView.$el.find('.profile-toggle').click();
+                LearnerProfileHelpers.expectBadgesHidden(badgeListingView, learnerProfileView);
             });
 
             it("renders the limited profile for under 13 users", function() {

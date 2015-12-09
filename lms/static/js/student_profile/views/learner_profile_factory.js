@@ -165,12 +165,6 @@
 
                 // Render the view for the first time
                 learnerProfileView.render();
-                var modeToggleView = new ModeToggleView({
-                    'el': $('.wrapper-toggle'),
-                    'badges': badgeListingView,
-                    'profile': $('.wrapper-profile-section-two')
-                });
-                modeToggleView.render();
             };
 
             if (options.has_preferences_access) {
@@ -180,10 +174,20 @@
             }
             showLearnerProfileView();
 
+            var modeToggleView = new ModeToggleView({
+                'el': $('.wrapper-toggle'),
+                'badges': badgeListingView,
+                'profile': $('.wrapper-profile-section-two')
+            });
+
+            modeToggleView.render();
+
             return {
                 accountSettingsModel: accountSettingsModel,
                 accountPreferencesModel: accountPreferencesModel,
-                learnerProfileView: learnerProfileView
+                learnerProfileView: learnerProfileView,
+                modeToggleView: modeToggleView,
+                badgeListingView: badgeListingView
             };
         };
     });

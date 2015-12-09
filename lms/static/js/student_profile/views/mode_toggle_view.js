@@ -30,7 +30,7 @@
                     }
                     this.badges.$el.hide();
                     this.badges.render();
-                    this.$el.show();
+                    this.$el.removeClass('is-hidden');
                     return this;
                 }
             });
