@@ -106,11 +106,11 @@ define(['underscore'], function(_) {
     };
 
     var expectModeToggleToBeHidden = function(modeToggleView) {
-        expect(modeToggleView.$el.hasClass('is-hidden')).toBe(true);
+        expect(modeToggleView.$el.is(':visible')).toBe(false);
     };
 
     var expectModeToggleToBeShown = function(modeToggleView) {
-        expect(modeToggleView.$el.hasClass('is-hidden')).toBe(false);
+        expect(modeToggleView.$el.is(':visible')).toBe(true);
     };
 
     var expectBadgesDisplayed = function(badgeListingView, learnerProfileView, empty) {

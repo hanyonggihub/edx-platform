@@ -25,4 +25,4 @@ class BadgeAssertionSerializer(serializers.ModelSerializer):
 
     class Meta(object):
         model = BadgeAssertion
-        fields = ('badge_class', 'image_url', 'assertion_url', 'created_at')
+        fields = ('badge_class', 'image_url', 'assertion_url', 'created')

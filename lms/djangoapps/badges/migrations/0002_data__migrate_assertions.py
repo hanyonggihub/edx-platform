@@ -55,7 +55,7 @@ def forwards(apps, schema_editor):
         )
         assertion.save()
         # Would be overwritten by the first save.
-        assertion.created_at = datetime.fromtimestamp(
+        assertion.created = datetime.fromtimestamp(
             time.mktime(time.strptime(badge.data['created_at'], "%Y-%m-%dT%H:%M:%S"))
         )
         assertion.save()

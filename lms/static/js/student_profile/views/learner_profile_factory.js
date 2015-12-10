@@ -10,13 +10,12 @@
         'js/student_profile/models/badges_model',
         'js/student_profile/collections/badges_collection',
         'js/student_profile/views/badge_listing_view',
-        'js/student_profile/views/mode_toggle_view',
         'js/student_account/views/account_settings_fields',
         'js/views/message_banner',
         'string_utils'
     ], function (gettext, $, _, Backbone, Logger, AccountSettingsModel, AccountPreferencesModel, FieldsView,
                  LearnerProfileFieldsView, LearnerProfileView, BadgeModel, BadgeCollection, BadgeListingView,
-                 ModeToggleView, AccountSettingsFieldViews, MessageBannerView) {
+                 AccountSettingsFieldViews, MessageBannerView) {
 
         return function (options) {
 
@@ -126,6 +125,14 @@
                 })
             ];
 
+            var badgeCollection = new BadgeCollection(accountSettingsModel.get('badges'));
+
+            var badgeListingView = new BadgeListingView({
+                'attributes': {'class': 'badge-set-display'},
+                'collection': badgeCollection,
+                'find_courses_url': options.find_courses_url
+            });
+
             var learnerProfileView = new LearnerProfileView({
                 el: learnerProfileElement,
                 ownProfile: options.own_profile,
@@ -136,15 +143,8 @@
                 profileImageFieldView: profileImageFieldView,
                 usernameFieldView: usernameFieldView,
                 sectionOneFieldViews: sectionOneFieldViews,
-                sectionTwoFieldViews: sectionTwoFieldViews
-            });
-
-            var badgeCollection = new BadgeCollection(options.account_settings_data.badges);
-
-            var badgeListingView = new BadgeListingView({
-                'el': $('.wrapper-badges'),
-                'collection': badgeCollection,
-                'find_courses_url': options.find_courses_url
+                sectionTwoFieldViews: sectionTwoFieldViews,
+                badgeListingView: badgeListingView
             });
 
             var getProfileVisibility = function() {
@@ -174,20 +174,10 @@
             }
             showLearnerProfileView();
 
-            var modeToggleView = new ModeToggleView({
-                'el': $('.wrapper-toggle'),
-                'badges': badgeListingView,
-                'profile': $('.wrapper-profile-section-two'),
-                'raw_badges': options.account_settings_data.badges
-            });
-
-            modeToggleView.render();
-
             return {
                 accountSettingsModel: accountSettingsModel,
                 accountPreferencesModel: accountPreferencesModel,
                 learnerProfileView: learnerProfileView,
-                modeToggleView: modeToggleView,
                 badgeListingView: badgeListingView
             };
         };

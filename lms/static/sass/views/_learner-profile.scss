@@ -314,7 +314,8 @@
     }
 
     .badge-set-display {
-        @extend .wrapper-profile-sections;
+        @extend .container;
+        padding: 0 0;
         .badge-display {
             width: 50%;
             display: inline-block;
@@ -353,7 +354,7 @@
                     line-height: 1.5em;
                 }
                 .badge-date-stamp{
-                    @extend %t-copy-sub2;
+                    @extend %t-copy-sub1;
                 }
                 .find-button-container {
                     border: 1px solid $blue-l1;
@@ -370,7 +371,7 @@
             box-shadow: inset 0 0 4px 0 $gray-l4;
         }
     }
-    .wrapper-toggle {
+    .toggle-container {
         padding: .5em 0;
     }
     .toggle-menu {

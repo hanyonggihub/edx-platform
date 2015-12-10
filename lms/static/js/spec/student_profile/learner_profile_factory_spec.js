@@ -64,21 +64,21 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
 
             it("doesn't show the mode toggle if badges are disabled", function() {
                 var context = createProfilePage(true, {badges: false}),
-                    modeToggleView = context.modeToggleView;
+                    modeToggleView = context.learnerProfileView.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeHidden(modeToggleView);
             });
 
             it("renders the mode toggle if there are badges", function() {
                 var context = createProfilePage(true, {badges: LearnerProfileHelpers.exampleBadges}),
-                    modeToggleView = context.modeToggleView;
+                    modeToggleView = context.learnerProfileView.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeShown(modeToggleView);
             });
 
             it("renders the mode toggle if badges enabled but none exist", function() {
                 var context = createProfilePage(true, {badges: []}),
-                    modeToggleView = context.modeToggleView;
+                    modeToggleView = context.learnerProfileView.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeShown(modeToggleView);
             });
@@ -86,26 +86,26 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
             it("displays the badges when the accomplishments toggle is selected", function () {
                 var context = createProfilePage(true, {badges: LearnerProfileHelpers.exampleBadges}),
                     learnerProfileView = context.learnerProfileView,
-                    modeToggleView = context.modeToggleView,
+                    modeToggleView = learnerProfileView.modeToggleView,
                     badgeListingView = context.badgeListingView;
 
                 LearnerProfileHelpers.expectBadgesHidden(badgeListingView, learnerProfileView);
-                modeToggleView.$el.find('.accomplishments-toggle').click();
+                modeToggleView.$el.find('[data-section=".badge-set-display"]').click();
                 LearnerProfileHelpers.expectBadgesDisplayed(badgeListingView, learnerProfileView);
-                modeToggleView.$el.find('.profile-toggle').click();
+                modeToggleView.$el.find('[data-section=".wrapper-profile-section-two"]').click();
                 LearnerProfileHelpers.expectBadgesHidden(badgeListingView, learnerProfileView);
             });
 
             it("displays a placeholder when the accomplishments toggle is selected and no badges exist", function () {
                 var context = createProfilePage(true, {badges: []}),
                     learnerProfileView = context.learnerProfileView,
-                    modeToggleView = context.modeToggleView,
+                    modeToggleView = context.learnerProfileView.modeToggleView,
                     badgeListingView = context.badgeListingView;
 
                 LearnerProfileHelpers.expectBadgesHidden(badgeListingView, learnerProfileView);
-                modeToggleView.$el.find('.accomplishments-toggle').click();
+                modeToggleView.$el.find('[data-section=".badge-set-display"]').click();
                 LearnerProfileHelpers.expectBadgesDisplayed(badgeListingView, learnerProfileView, true);
-                modeToggleView.$el.find('.profile-toggle').click();
+                modeToggleView.$el.find('[data-section=".wrapper-profile-section-two"]').click();
                 LearnerProfileHelpers.expectBadgesHidden(badgeListingView, learnerProfileView);
             });
 

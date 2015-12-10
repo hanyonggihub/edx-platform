@@ -9,6 +9,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from lazy import lazy
+from model_utils.models import TimeStampedModel
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey
 
@@ -122,7 +123,7 @@ class BadgeClass(models.Model):
         verbose_name_plural = "Badge Classes"
 
 
-class BadgeAssertion(models.Model):
+class BadgeAssertion(TimeStampedModel):
     """
     Tracks badges on our side of the badge baking transaction
     """
@@ -132,7 +133,6 @@ class BadgeAssertion(models.Model):
     backend = models.CharField(max_length=50)
     image_url = models.URLField()
     assertion_url = models.URLField()
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
 
     def __unicode__(self):
         return u"<{username} Badge Assertion for {slug} for {issuing_component}".format(

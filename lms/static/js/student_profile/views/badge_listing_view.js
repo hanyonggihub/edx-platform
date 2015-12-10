@@ -6,7 +6,10 @@
         function (gettext, $, _, Backbone, BadgeView, badgePlaceholder) {
             var BadgeListingView = Backbone.View.extend({
                 render: function () {
-                    var badgeContainer = $('<div class="badge-set-display">');
+                    // These are static, no need to fully redraw after the first time.
+                    if (this.rendered) {
+                        return this;
+                    }
                     var row = $('<div class="row">');
                     var make_last_row = true;
                     // Split into two columns.
@@ -14,7 +17,7 @@
                         /*jshint -W018 */
                         var make_row = (index && !(index % 2));
                         if (make_row) {
-                            badgeContainer.append(row);
+                            this.$el.append(row);
                             row = $('<div class="row">');
                             make_last_row = false;
                         } else {
@@ -27,12 +30,12 @@
                         badgePlaceholder,  {find_courses_url: this.options.find_courses_url}
                     );
                     if (make_last_row) {
-                        badgeContainer.append(row);
+                        this.$el.append(row);
                         row = $('<div class="row">');
                     }
                     row.append(placeholder);
-                    badgeContainer.append(row);
-                    this.$el.html(badgeContainer);
+                    this.$el.append(row);
+                    this.rendered = true;
                     return this;
                 }
             });

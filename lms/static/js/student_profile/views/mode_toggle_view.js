@@ -5,32 +5,36 @@
         function (gettext, $, _, Backbone) {
 
             var ModeToggleView = Backbone.View.extend({
-                initialize: function(options) {
-                    var self = this;
-                    this.profile = options.profile;  // JQuery Selector
-                    this.badges = options.badges;  // Backbone View
-                    this.raw_badges = options.raw_badges; // JSON output of badges field from server.
-                    this.sections = $([this.profile[0], this.badges.el]);
-                    this.profile_toggle = this.$el.find('.profile-toggle');
-                    this.accomplishments_toggle = this.$el.find('.accomplishments-toggle');
-                    function setToggle(event) {
-                        var target = $(event.target);
-                        self.$el.find('*').removeClass('is-active');
-                        target.addClass('is-active');
-                        self.sections.hide();
-                        event.data.section.show();
-                    }
-                    this.profile_toggle.click({'section': this.profile}, setToggle);
-                    this.accomplishments_toggle.click({'section': this.badges.$el}, setToggle);
+                events : {
+                    'click .toggle-button': 'updateToggle'
+                },
+                hideSections: function () {
+                    var sections = _.map(
+                        this.$el.find('.toggle-button'),
+                        function (button) {return $($(button).data().section)[0];}
+                    );
+                    $(sections).hide();
+                },
+                updateToggle: function(event) {
+                    var target = $(event.target);
+                    this.options.activeSection = target.data().section;
+                    this.setToggle();
+                },
+                setToggle: function() {
+                    var target = this.$el.find('[data-section="' + this.options.activeSection + '"]');
+                    console.log(this.$el.attr('id'));
+                    this.$el.find('*').removeClass('is-active');
+                    console.log(this.$el.attr('id'));
+                    target.addClass('is-active');
+                    this.hideSections();
+                    $(this.options.activeSection).show();
                 },
                 render: function () {
-                    if (this.raw_badges === false) {
-                        // Badges disabled, nothing to show.
-                        return this;
+                    if (!this.$el.html()) {
+                        this.$el.html(_.template(this.options.template, {}));
                     }
-                    this.badges.$el.hide();
-                    this.badges.render();
-                    this.$el.removeClass('is-hidden');
+                    this.setToggle();
+                    this.delegateEvents();
                     return this;
                 }
             });

@@ -1,14 +1,22 @@
 ;(function (define, undefined) {
     'use strict';
     define([
-        'gettext', 'jquery', 'underscore', 'backbone', 'text!templates/student_profile/learner_profile.underscore'],
-        function (gettext, $, _, Backbone, learnerProfileTemplate) {
+        'gettext', 'jquery', 'underscore', 'backbone', 'js/student_profile/views/mode_toggle_view',
+        'text!templates/student_profile/learner_profile.underscore',
+        'text!templates/student_profile/mode_toggle.underscore'],
+        function (gettext, $, _, Backbone, ModeToggleView, learnerProfileTemplate, modeToggleTemplate) {
 
         var LearnerProfileView = Backbone.View.extend({
 
             initialize: function () {
                 _.bindAll(this, 'showFullProfile', 'render', 'renderFields', 'showLoadingError');
                 this.listenTo(this.options.preferencesModel, "change:" + 'account_privacy', this.render);
+
+                this.modeToggleView = new ModeToggleView({
+                    'attributes': {'class': 'toggle-container'},
+                    'activeSection': '.wrapper-profile-section-two',
+                    'template': modeToggleTemplate
+                });
             },
 
             showFullProfile: function () {
@@ -26,6 +34,13 @@
                     ownProfile: this.options.ownProfile,
                     showFullProfile: this.showFullProfile()
                 }));
+                if (this.showFullProfile() && (this.options.accountSettingsModel.get('badges') !== false)) {
+                    var badges = this.options.badgeListingView.render().$el;
+                    badges.hide();
+                    this.$el.find('.wrapper-badges').append(badges);
+                    this.$el.find('.wrapper-toggle').append(this.modeToggleView.render().$el);
+                }
+
                 this.renderFields();
                 return this;
             },

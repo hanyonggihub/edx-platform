@@ -1,0 +1,8 @@
+<ul class="toggle-menu">
+  <li class="toggle-switch">
+    <button class="toggle-button" data-section=".wrapper-profile-section-two"><%- gettext("About") %></button>
+  </li>
+  <li class="toggle-switch">
+    <button class="toggle-button" data-section=".badge-set-display"><%- gettext("Accomplishments") %></button>
+  </li>
+</ul>

@@ -54,7 +54,10 @@ class UserReadOnlySerializer(serializers.Serializer):
             self.configuration = settings.ACCOUNT_VISIBILITY_CONFIGURATION
 
         # Don't pass the 'custom_fields' arg up to the superclass
-        self.custom_fields = kwargs.pop('custom_fields', None)
+        self.custom_fields = kwargs.pop('custom_fields', [])
+
+        # Don't pass excluded arg up to the superclass
+        self.excluded_fields = kwargs.pop('excluded_fields', None)
 
         super(UserReadOnlySerializer, self).__init__(*args, **kwargs)
 
@@ -66,11 +69,15 @@ class UserReadOnlySerializer(serializers.Serializer):
         """
         profile = user.profile
         badges = settings.FEATURES.get('ENABLE_OPENBADGES') or False
-        badges = badges and BadgeAssertionSerializer(
-            user.badgeassertion_set.all(),
-            many=True,
-            context={'request': self.context['request']}
-        ).data
+        if 'badges' in self.excluded_fields:
+            # Avoid doing this potentially expensive query-- it will be filtered out anyway.
+            badges = None
+        else:
+            badges = badges and BadgeAssertionSerializer(
+                user.badgeassertion_set.all().order_by('-created'),
+                many=True,
+                context={'request': self.context['request']}
+            ).data
 
         data = {
             "username": user.username,
@@ -127,9 +134,14 @@ class UserReadOnlySerializer(serializers.Serializer):
         profile_visibility = self._get_profile_visibility(user_profile, user)
 
         if profile_visibility == ALL_USERS_VISIBILITY:
-            return self.configuration.get('shareable_fields')
+            fields = self.configuration.get('shareable_fields')
         else:
-            return self.configuration.get('public_fields')
+            fields = self.configuration.get('public_fields')
+
+        if self.excluded_fields:
+            fields = [field for field in fields if field not in self.excluded_fields]
+
+        return fields
 
     def _get_profile_visibility(self, user_profile, user):
         """Returns the visibility level for the specified user profile."""

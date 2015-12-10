@@ -97,6 +97,8 @@ class AccountView(APIView):
             * year_of_birth: The year the user was born, as an integer, or null.
             * account_privacy: The user's setting for sharing her personal
               profile. Possible values are "all_users" or "private".
+            * badges: A listing of all badges the user has earned. False if
+              badges are not enabled on this instance.
 
             For all text fields, plain text instead of HTML is supported. The
             data is stored exactly as specified. Clients must HTML escape
@@ -111,6 +113,13 @@ class AccountView(APIView):
             Note that a user can view which account fields they have shared
             with other users by requesting their own username and providing
             the "view=shared" URL parameter.
+
+        **Params for GET**
+
+            * exclude: A field not to be returned in the results. This might
+              be useful if the field is expected to create a large response
+              payload (such as with badges) and it won't be used. You may
+              specify this option multiple times for multiple fields.
 
         **Response Values for PATCH**
 
@@ -145,8 +154,11 @@ class AccountView(APIView):
         """
         GET /api/user/v1/accounts/{username}/
         """
+        excluded = request.query_params.getlist('exclude', [])
         try:
-            account_settings = get_account_settings(request, username, view=request.query_params.get('view'))
+            account_settings = get_account_settings(
+                request, username, view=request.query_params.get('view'), excluded=excluded
+            )
         except UserNotFound:
             return Response(status=status.HTTP_403_FORBIDDEN if request.user.is_staff else status.HTTP_404_NOT_FOUND)
 

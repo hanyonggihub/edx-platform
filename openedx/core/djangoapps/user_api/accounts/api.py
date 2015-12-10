@@ -38,7 +38,7 @@ from .serializers import (
 
 
 @intercept_errors(UserAPIInternalError, ignore_errors=[UserAPIRequestError])
-def get_account_settings(request, username=None, configuration=None, view=None):
+def get_account_settings(request, username=None, configuration=None, view=None, excluded=None):
     """Returns account information for a user serialized as JSON.
 
     Note:
@@ -54,6 +54,7 @@ def get_account_settings(request, username=None, configuration=None, view=None):
         configuration (dict): an optional configuration specifying which fields in the account
             can be shared, and the default visibility settings. If not present, the setting value with
             key ACCOUNT_VISIBILITY_CONFIGURATION is used.
+        excluded (list): an optional list of fields not to return from the user's profile.
         view (str): An optional string allowing "is_staff" users and users requesting their own
             account information to get just the fields that are shared with everyone. If view is
             "shared", only shared account information will be returned, regardless of `request.user`.
@@ -86,6 +87,7 @@ def get_account_settings(request, username=None, configuration=None, view=None):
         existing_user,
         configuration=configuration,
         custom_fields=admin_fields,
+        excluded_fields=excluded or [],
         context={'request': request}
     ).data
 
