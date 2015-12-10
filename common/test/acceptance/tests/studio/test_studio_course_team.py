@@ -1,6 +1,8 @@
 """
 Acceptance tests for course in studio
 """
+from flaky import flaky
+
 from nose.plugins.attrib import attr
 
 from .base_studio_test import StudioCourseTest
@@ -156,6 +158,7 @@ class CourseTeamPageTest(StudioCourseTest):
 
         self._assert_can_not_manage_users()
 
+    @flaky(max_runs=40, min_passes=40)
     def test_admins_can_delete_other_users(self):
         """
         Scenario: Admins can delete other users
