@@ -83,24 +83,24 @@ def validate_uploaded_image(uploaded_file):
     # see also: http://en.wikipedia.org/wiki/Magic_number_%28programming%29
 
     if uploaded_file.size > settings.PROFILE_IMAGE_MAX_BYTES:
-        too_large_message = _(
+        file_upload_too_large = _(
             u'The file must be smaller than {image_max_size} in size.'
         ).format(image_max_size=user_friendly_size(settings.PROFILE_IMAGE_MAX_BYTES)
-        raise ImageValidationError(too_large_message)
+        raise ImageValidationError(file_upload_too_large)
     elif uploaded_file.size < settings.PROFILE_IMAGE_MIN_BYTES:
-        too_small_message = _(
+        file_upload_too_small = _(
             u'The file must be at least {image_min_size} in size.'
         ).format(image_min_size=user_friendly_size(settings.PROFILE_IMAGE_MIN_BYTES)
-        raise ImageValidationError(too_small_message)
+        raise ImageValidationError(file_upload_too_small)
 
     # check the file extension looks acceptable
     filename = unicode(uploaded_file.name).lower()
     filetype = [ft for ft in IMAGE_TYPES if any(filename.endswith(ext) for ext in IMAGE_TYPES[ft].extensions)]
     if not filetype:
-        bad_type_message = _(
+        file_upload_bad_type = _(
             u'The file must be one of the following types: {valid_file_types}.'
         ).format(valid_file_types=get_valid_file_types())
-        raise ImageValidationError(bad_type_message)
+        raise ImageValidationError(file_upload_bad_type)
     filetype = filetype[0]
 
     # check mimetype matches expected file type

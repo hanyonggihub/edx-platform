@@ -31,7 +31,7 @@ class TestValidateUploadedImage(TestCase):
     """
     Test validate_uploaded_image
     """
-    BAD_TYPE_ERROR_MESSAGE = (
+    FILE_UPLOAD_BAD_TYPE = (
         u'The file must be one of the following types: {valid_file_types}.'.format(
             valid_file_types=get_valid_file_types()
         )
@@ -71,8 +71,8 @@ class TestValidateUploadedImage(TestCase):
         (".jpg", "image/jpeg"),
         (".jpeg", "image/jpeg"),
         (".png", "image/png"),
-        (".bmp", "image/bmp", BAD_TYPE_ERROR_MESSAGE),
-        (".tif", "image/tiff", BAD_TYPE_ERROR_MESSAGE),
+        (".bmp", "image/bmp", FILE_UPLOAD_BAD_TYPE),
+        (".tif", "image/tiff", FILE_UPLOAD_BAD_TYPE),
     )
     @ddt.unpack
     def test_extension(self, extension, content_type, expected_failure_message=None):
