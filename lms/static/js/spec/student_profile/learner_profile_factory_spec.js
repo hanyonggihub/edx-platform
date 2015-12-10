@@ -63,7 +63,7 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
             });
 
             it("doesn't show the mode toggle if badges are disabled", function() {
-                var context = createProfilePage(true, {badges: null}),
+                var context = createProfilePage(true, {badges: false}),
                     modeToggleView = context.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeHidden(modeToggleView);

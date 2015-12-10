@@ -238,6 +238,7 @@
     }
 
     .wrapper-profile-section-two {
+        padding-top: 1em;
         width: flex-grid(8, 12);
     }
 
@@ -314,14 +315,14 @@
 
     .badge-set-display {
         @extend .wrapper-profile-sections;
-        margin-top: $baseline;
         .badge-display {
             width: 50%;
             display: inline-block;
             vertical-align: top;
+            padding: 2em 0;
             .badge-image-container {
                 padding-right: $baseline;
-                padding-bottom: $baseline;
+                margin-left: 1em;
                 width: 20%;
                 vertical-align: top;
                 display: inline-block;
@@ -329,7 +330,7 @@
                     width: 100%;
                 }
                 .accomplishment-placeholder {
-                    border: 2px dotted $gray-d1;
+                    border: 4px dotted $gray-l4;
                     border-radius: 50%;
                     display: block;
                     width: 100%;
@@ -337,17 +338,25 @@
                 }
             }
             .badge-details {
+                @extend %t-copy-sub1;
+                @extend %t-regular;
                 max-width: 70%;
                 display: inline-block;
+                color: $gray-d1;
                 .badge-name {
                     @extend %t-strong;
-                    padding-bottom: ($baseline/2);
+                    @extend %t-copy-base;
+                    color: $gray-d3;
                 }
                 .badge-description {
                     padding-bottom: $baseline;
+                    line-height: 1.5em;
+                }
+                .badge-date-stamp{
+                    @extend %t-copy-sub2;
                 }
                 .find-button-container {
-                    border: 2px solid $blue-t2;
+                    border: 1px solid $blue-l1;
                     padding: ($baseline / 2) $baseline ($baseline / 2) $baseline;
                     display: inline-block;
                     border-radius: 5px;
@@ -356,8 +365,15 @@
                 }
             }
         }
+        .badge-placeholder {
+            background-color: $gray-l7;
+            box-shadow: inset 0 0 4px 0 $gray-l4;
+        }
     }
     .wrapper-toggle {
+        padding: .5em 0;
+    }
+    .toggle-menu {
         margin: 0;
         padding: 0;
         list-style: none;
@@ -366,11 +382,12 @@
         @include clearfix();
 
         .toggle-switch {
-            float: left;
+            @include float(left);
             position: relative;
             bottom: -(spacing-vertical(xx-small));
             margin-bottom: -.25rem;
             button.toggle-button {
+                @extend %t-copy-base;
                 display: block;
                 margin: 0;
                 border: 0 solid $transparent;
@@ -379,7 +396,7 @@
                 font-weight: normal;
                 background: $transparent;
                 padding-bottom: ($baseline*.75);
-                color: $gray-d1;
+                color: $blue-s1;
 
                 &:hover,
                 &:focus {

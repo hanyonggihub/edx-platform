@@ -51,7 +51,6 @@ class UserAPITestCase(APITestCase):
         self.staff_user = UserFactory(is_staff=True, password=self.test_password)
         self.staff_client = APIClient()
         self.user = UserFactory.create(password=self.test_password)  # will be assigned to self.client by default
-        self.badges = []
 
     def login_client(self, api_client, user):
         """Helper method for getting the client and user and logging in. Returns client. """
@@ -174,7 +173,7 @@ class TestAccountAPI(UserAPITestCase):
         if badges_enabled:
             self.assertEqual(3, len(data['badges']))
         else:
-            self.assertEqual([], data['badges'])
+            self.assertEqual(False, data['badges'])
 
     def _verify_private_account_response(self, response, requires_parental_consent=False, account_privacy=None):
         """
@@ -335,7 +334,7 @@ class TestAccountAPI(UserAPITestCase):
             self.assertEqual([], data["language_proficiencies"])
             self.assertEqual(PRIVATE_VISIBILITY, data["account_privacy"])
             # Badges aren't on by default, so should not be present.
-            self.assertEqual([], data["badges"])
+            self.assertEqual(False, data["badges"])
 
         self.client.login(username=self.user.username, password=self.test_password)
         verify_get_own_information()

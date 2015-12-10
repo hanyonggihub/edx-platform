@@ -6,16 +6,32 @@
         function (gettext, $, _, Backbone, BadgeView, badgePlaceholder) {
             var BadgeListingView = Backbone.View.extend({
                 render: function () {
-                    var self = this;
                     var badgeContainer = $('<div class="badge-set-display">');
-                    var badgeList = $('<div class="badge-list">');
-                    this.collection.each(function (badge) {
-                        badgeList.append(new BadgeView({model: badge}).render().el);
+                    var row = $('<div class="row">');
+                    var make_last_row = true;
+                    // Split into two columns.
+                    this.collection.each(function (badge, index) {
+                        /*jshint -W018 */
+                        var make_row = (index && !(index % 2));
+                        if (make_row) {
+                            badgeContainer.append(row);
+                            row = $('<div class="row">');
+                            make_last_row = false;
+                        } else {
+                            make_last_row = true;
+                        }
+                        row.append(new BadgeView({model: badge}).render().el);
                     }, this);
-                    badgeList.append(
-                        _.template(badgePlaceholder,  {'find_courses_url': self.options.find_courses_url})
+                    // Placeholder must always be at the end, and may need a new row.
+                    var placeholder = _.template(
+                        badgePlaceholder,  {find_courses_url: this.options.find_courses_url}
                     );
-                    badgeContainer.append(badgeList);
+                    if (make_last_row) {
+                        badgeContainer.append(row);
+                        row = $('<div class="row">');
+                    }
+                    row.append(placeholder);
+                    badgeContainer.append(row);
                     this.$el.html(badgeContainer);
                     return this;
                 }
