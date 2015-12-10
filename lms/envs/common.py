@@ -206,9 +206,6 @@ FEATURES = {
     # Enable Custom Courses for EdX
     'CUSTOM_COURSES_EDX': False,
 
-    # Enable legacy instructor dashboard
-    'ENABLE_INSTRUCTOR_LEGACY_DASHBOARD': False,
-
     # Is this an edX-owned domain? (used for edX specific messaging and images)
     'IS_EDX_DOMAIN': False,
 
