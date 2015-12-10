@@ -559,9 +559,9 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             """
             Create & open the connection, authenticate, and provide pointers to the collection
             """
-            # Set a write concern of 1, which makes writes complete successfully to the primary
-            # only before returning. Also makes pymongo report write errors.
-            kwargs['w'] = 1
+            # Set a write concern of 'majority', which makes writes complete successfully to a majority
+            # of nodes in the replica set before returning. Also makes pymongo report write errors.
+            kwargs['w'] = 'majority'
 
             self.database = connect_to_mongodb(
                 db, host,
