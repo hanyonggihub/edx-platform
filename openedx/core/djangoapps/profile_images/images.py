@@ -84,17 +84,13 @@ def validate_uploaded_image(uploaded_file):
 
     if uploaded_file.size > settings.PROFILE_IMAGE_MAX_BYTES:
         too_large_message = _(
-            u'The file must be smaller than {image_max_size} in size.'.format(
-                image_max_size=user_friendly_size(settings.PROFILE_IMAGE_MAX_BYTES)
-            )
-        )
+            u'The file must be smaller than {image_max_size} in size.'
+        ).format(image_max_size=user_friendly_size(settings.PROFILE_IMAGE_MAX_BYTES)
         raise ImageValidationError(too_large_message)
     elif uploaded_file.size < settings.PROFILE_IMAGE_MIN_BYTES:
         too_small_message = _(
-            u'The file must be at least {image_min_size} in size.'.format(
-                image_min_size=user_friendly_size(settings.PROFILE_IMAGE_MIN_BYTES)
-            )
-        )
+            u'The file must be at least {image_min_size} in size.'
+        ).format(image_min_size=user_friendly_size(settings.PROFILE_IMAGE_MIN_BYTES)
         raise ImageValidationError(too_small_message)
 
     # check the file extension looks acceptable
@@ -102,10 +98,8 @@ def validate_uploaded_image(uploaded_file):
     filetype = [ft for ft in IMAGE_TYPES if any(filename.endswith(ext) for ext in IMAGE_TYPES[ft].extensions)]
     if not filetype:
         bad_type_message = _(
-            u'The file must be one of the following types: {valid_file_types}.'.format(
-                valid_file_types=get_valid_file_types()
-            )
-        )
+            u'The file must be one of the following types: {valid_file_types}.'
+        ).format(valid_file_types=get_valid_file_types())
         raise ImageValidationError(bad_type_message)
     filetype = filetype[0]
 
