@@ -416,9 +416,10 @@
                     $.fn.scrollTo.reset();
                 });
 
-                xit('show explanation message', function () {
-                    expect($('.closed-captions')).toHaveHtml(
-                        '(Caption will be displayed when you start playing the video.)'
+                it('show explanation message', function () {
+                    expect($('.subtitles-menu')).toHaveHtml(
+                        'Caption will be displayed when you start playing ' +
+                        'the video.'
                     );
                 });
 
