@@ -141,7 +141,7 @@ class ProgressPageCreditRequirementsTest(ModuleStoreTestCase):
             status="failed", reason={}
         )
         self.enrollment.mode = 'honor'
-        self.enrollment.save()
+        self.enrollment.save()  # pylint: disable=no-member
 
         # Check the progress page display
         response = self._get_progress_page()
