@@ -1,8 +1,5 @@
 <form>
-    <h3 class="modal-section-title"><%- gettext('Additional Options:') %></h3>
-
     <div class="modal-section-content has-actions">
-
         <div class='exam-time-list-fields'>
             <ul class="list-fields list-input">
                 <li class="field-radio">

@@ -84,7 +84,9 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
         getContext: function () {
             return $.extend({
                 xblockInfo: this.model,
-                introductionMessage: this.getIntroductionMessage()
+                introductionMessage: this.getIntroductionMessage(),
+                enable_proctored_exams: this.options.enable_proctored_exams,
+                enable_timed_exams: this.options.enable_timed_exams
             });
         },
 
@@ -133,14 +135,14 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
 
                 this.options.special_exam_editors = _.map(special_exams_editors, function (Editor) {
                     return new Editor({
-                        parentElement: this.$('.modal-section div.additional_settings'),
+                        parentElement: this.$('.modal-section div.advanced_settings'),
                         model: this.model,
                         xblockType: this.options.xblockType,
                         enable_proctored_exams: this.options.enable_proctored_exams,
                         enable_timed_exams: this.options.enable_timed_exams
                     });
                 }, this);
-                this.hideAdditionalSettings();
+                this.hideAdvancedSettings();
             } else {
                 CourseOutlineXBlockModal.prototype.initializeEditors.call(this);
             }
@@ -149,7 +151,7 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
         events: {
             'click .action-save': 'save',
             'click #general_settings': 'showGeneralSettings',
-            'click #additional_settings': 'showAdditionalSettings'
+            'click #advanced_settings': 'showAdvancedSettings'
         },
 
         /**
@@ -164,26 +166,26 @@ define(['jquery', 'backbone', 'underscore', 'gettext', 'js/views/baseview',
             return $.extend.apply(this, [true, {}].concat(requestData));
         },
 
-        hideAdditionalSettings: function() {
+        hideAdvancedSettings: function() {
             this.$('.modal-section a#general_settings').addClass('active');
-            this.$('.modal-section a#additional_settings').removeClass('active');
+            this.$('.modal-section a#advanced_settings').removeClass('active');
             this.$('.modal-section div.general_settings').show();
-            this.$('.modal-section div.additional_settings').hide();
+            this.$('.modal-section div.advanced_settings').hide();
 
         },
 
         hideGeneralSettings: function() {
             this.$('.modal-section a#general_settings').removeClass('active');
-            this.$('.modal-section a#additional_settings').addClass('active');
+            this.$('.modal-section a#advanced_settings').addClass('active');
             this.$('.modal-section div.general_settings').hide();
-            this.$('.modal-section div.additional_settings').show();
+            this.$('.modal-section div.advanced_settings').show();
         },
         showGeneralSettings: function (event) {
             event.preventDefault();
-            this.hideAdditionalSettings();
+            this.hideAdvancedSettings();
         },
 
-        showAdditionalSettings: function (event) {
+        showAdvancedSettings: function (event) {
             event.preventDefault();
             this.hideGeneralSettings();
         }
