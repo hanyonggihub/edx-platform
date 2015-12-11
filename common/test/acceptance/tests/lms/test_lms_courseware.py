@@ -214,7 +214,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I Make the exam proctored.
         self.course_outline.make_exam_proctored()
@@ -241,7 +241,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I Make the exam timed.
         self.course_outline.make_exam_timed()
@@ -274,7 +274,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I select the 'None' exams radio button
         self.course_outline.select_none_exam()
@@ -297,7 +297,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I select the timed exams radio button
         self.course_outline.select_timed_exam()
@@ -320,7 +320,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I select the proctored exams radio button
         self.course_outline.select_proctored_exam()
@@ -343,7 +343,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I select the proctored exams radio button
         self.course_outline.select_proctored_exam()
@@ -366,7 +366,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I select the timed exams radio button
         self.course_outline.select_timed_exam()
@@ -401,7 +401,7 @@ class ProctoredExamTest(UniqueCourseTest):
         self.course_outline.open_exam_settings_dialog()
 
         # select addtional settings tab
-        self.course_outline.select_additional_settings_tab()
+        self.course_outline.select_advanced_settings_tab()
 
         # When I select the practice exams radio button
         self.course_outline.select_practice_exam()

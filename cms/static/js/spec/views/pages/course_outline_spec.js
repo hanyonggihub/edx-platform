@@ -580,7 +580,7 @@ define(["jquery", "common/js/spec_helpers/ajax_helpers", "common/js/components/u
 
             describe("Subsection", function() {
                 var getDisplayNameWrapper, setEditModalValues, mockServerValuesJson,
-                    selectDisableSpecialExams, selectGeneralSettings, selectAdditionalSettings,
+                    selectDisableSpecialExams, selectGeneralSettings, selectAdvancedSettings,
                     selectTimedExam, selectProctoredExam, selectPracticeExam;
 
                 getDisplayNameWrapper = function() {
@@ -602,8 +602,8 @@ define(["jquery", "common/js/spec_helpers/ajax_helpers", "common/js/components/u
                    this.$(".modal-section a#general_settings").click();
                 };
 
-                selectAdditionalSettings = function() {
-                   this.$(".modal-section a#additional_settings").click();
+                selectAdvancedSettings = function() {
+                   this.$(".modal-section a#advanced_settings").click();
                 };
 
                 selectTimedExam = function(time_limit) {
@@ -719,12 +719,12 @@ define(["jquery", "common/js/spec_helpers/ajax_helpers", "common/js/components/u
                     expect($('.modal-section a#additional_settings')).not.toHaveClass('active');
                 });
 
-                it('can show additional settings', function() {
+                it('can show advanced settings', function() {
                     createCourseOutlinePage(this, mockCourseJSON, false);
                     outlinePage.$('.outline-subsection .configure-button').click();
-                    selectAdditionalSettings();
+                    selectAdvancedSettings();
                     expect($('.modal-section a#general_settings')).not.toHaveClass('active');
-                    expect($('.modal-section a#additional_settings')).toHaveClass('active');
+                    expect($('.modal-section a#advanced_settings')).toHaveClass('active');
                 });
 
                 it('can be edited', function() {

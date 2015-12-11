@@ -530,11 +530,11 @@ class CourseOutlinePage(CoursePage, CourseOutlineContainer):
         self.q(css=".action-save").first.click()
         self.wait_for_ajax()
 
-    def select_additional_settings_tab(self):
+    def select_advanced_settings_tab(self):
         """
-        Select the additional settings tab
+        Select the advanced settings tab
         """
-        self.q(css="#additional_settings").first.click()
+        self.q(css="#advanced_settings").first.click()
         self.wait_for_element_presence('#id_not_timed', 'None radio button presence')
 
     def make_exam_proctored(self):
