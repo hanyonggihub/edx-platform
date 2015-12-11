@@ -309,11 +309,11 @@ class CourseOverview(TimeStampedModel):
         return course_metadata_utils.url_name_for_course_location(self.location)
 
     @property
-    def display_name_with_default(self):
+    def display_name_w_default_escaped(self):
         """
         Return reasonable display name for the course.
         """
-        return course_metadata_utils.display_name_with_default(self)
+        return course_metadata_utils.display_name_w_default_escaped(self)
 
     def has_started(self):
         """
