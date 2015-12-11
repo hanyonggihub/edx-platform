@@ -97,8 +97,8 @@ class AccountView(APIView):
             * year_of_birth: The year the user was born, as an integer, or null.
             * account_privacy: The user's setting for sharing her personal
               profile. Possible values are "all_users" or "private".
-            * badges: A listing of all badges the user has earned. False if
-              badges are not enabled on this instance.
+            * has_accomplishments: Signals whether badges are enabled on the
+              platform and should be fetched.
 
             For all text fields, plain text instead of HTML is supported. The
             data is stored exactly as specified. Clients must HTML escape
@@ -154,11 +154,9 @@ class AccountView(APIView):
         """
         GET /api/user/v1/accounts/{username}/
         """
-        excluded = request.query_params.getlist('exclude', [])
         try:
             account_settings = get_account_settings(
-                request, username, view=request.query_params.get('view'), excluded=excluded
-            )
+                request, username, view=request.query_params.get('view'))
         except UserNotFound:
             return Response(status=status.HTTP_403_FORBIDDEN if request.user.is_staff else status.HTTP_404_NOT_FOUND)
 

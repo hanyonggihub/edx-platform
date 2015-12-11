@@ -75,7 +75,6 @@ class TestAccountApi(UserSettingsEventTestMixin, TestCase):
 
             "public_fields": [
                 'email',
-                'goals',
             ],
         }
 
@@ -87,11 +86,8 @@ class TestAccountApi(UserSettingsEventTestMixin, TestCase):
             self.default_request,
             self.different_user.username,
             configuration=config,
-            # We should also be able to exclude fields.
-            excluded=['goals']
         )
         self.assertEqual(self.different_user.email, account_settings["email"])
-        self.assertNotIn('goals', account_settings)
 
     def test_get_user_not_found(self):
         """Test that UserNotFound is thrown if there is no user with username."""
@@ -283,7 +279,7 @@ class AccountSettingsOnCreationTest(TestCase):
             'requires_parental_consent': True,
             'language_proficiencies': [],
             'account_privacy': PRIVATE_VISIBILITY,
-            'badges': False,
+            'has_accomplishments': False,
         })
 
 

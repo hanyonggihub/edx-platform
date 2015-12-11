@@ -38,7 +38,7 @@ from .serializers import (
 
 
 @intercept_errors(UserAPIInternalError, ignore_errors=[UserAPIRequestError])
-def get_account_settings(request, username=None, configuration=None, view=None, excluded=None):
+def get_account_settings(request, username=None, configuration=None, view=None):
     """Returns account information for a user serialized as JSON.
 
     Note:
@@ -87,7 +87,6 @@ def get_account_settings(request, username=None, configuration=None, view=None, 
         existing_user,
         configuration=configuration,
         custom_fields=admin_fields,
-        excluded_fields=excluded or [],
         context={'request': request}
     ).data
 

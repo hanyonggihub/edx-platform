@@ -125,11 +125,9 @@
                 })
             ];
 
-            var badgeCollection = new BadgeCollection(accountSettingsModel.get('badges'));
-
             var badgeListingView = new BadgeListingView({
                 'attributes': {'class': 'badge-set-display'},
-                'collection': badgeCollection,
+                'url': options.badge_api_url,
                 'find_courses_url': options.find_courses_url
             });
 

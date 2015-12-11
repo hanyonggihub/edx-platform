@@ -56,9 +56,6 @@ class UserReadOnlySerializer(serializers.Serializer):
         # Don't pass the 'custom_fields' arg up to the superclass
         self.custom_fields = kwargs.pop('custom_fields', [])
 
-        # Don't pass excluded arg up to the superclass
-        self.excluded_fields = kwargs.pop('excluded_fields', [])
-
         super(UserReadOnlySerializer, self).__init__(*args, **kwargs)
 
     def to_representation(self, user):
@@ -68,16 +65,7 @@ class UserReadOnlySerializer(serializers.Serializer):
         :return: Dict serialized account
         """
         profile = user.profile
-        badges = settings.FEATURES.get('ENABLE_OPENBADGES') or False
-        if 'badges' in self.excluded_fields:
-            # Avoid doing this potentially expensive query-- it will be filtered out anyway.
-            badges = None
-        else:
-            badges = badges and BadgeAssertionSerializer(
-                user.badgeassertion_set.all().order_by('-created'),
-                many=True,
-                context={'request': self.context['request']}
-            ).data
+        has_accomplishments = settings.FEATURES.get('ENABLE_OPENBADGES') or False
 
         data = {
             "username": user.username,
@@ -111,7 +99,7 @@ class UserReadOnlySerializer(serializers.Serializer):
             "mailing_address": profile.mailing_address,
             "requires_parental_consent": profile.requires_parental_consent(),
             "account_privacy": self._get_profile_visibility(profile, user),
-            "badges": badges,
+            "has_accomplishments": has_accomplishments,
         }
 
         return self._filter_fields(
@@ -134,14 +122,9 @@ class UserReadOnlySerializer(serializers.Serializer):
         profile_visibility = self._get_profile_visibility(user_profile, user)
 
         if profile_visibility == ALL_USERS_VISIBILITY:
-            fields = self.configuration.get('shareable_fields')
+            return self.configuration.get('shareable_fields')
         else:
-            fields = self.configuration.get('public_fields')
-
-        if self.excluded_fields:
-            fields = [field for field in fields if field not in self.excluded_fields]
-
-        return fields
+            return self.configuration.get('public_fields')
 
     def _get_profile_visibility(self, user_profile, user):
         """Returns the visibility level for the specified user profile."""

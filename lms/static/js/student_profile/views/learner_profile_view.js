@@ -34,7 +34,9 @@
                     ownProfile: this.options.ownProfile,
                     showFullProfile: this.showFullProfile()
                 }));
-                if (this.showFullProfile() && (this.options.accountSettingsModel.get('badges') !== false)) {
+                if (this.showFullProfile() && (
+                        this.options.accountSettingsModel.get('has_accomplishments') !== false)
+                ) {
                     var badges = this.options.badgeListingView.render().$el;
                     badges.hide();
                     this.$el.find('.wrapper-badges').append(badges);

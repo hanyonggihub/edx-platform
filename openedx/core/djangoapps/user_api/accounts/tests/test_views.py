@@ -170,10 +170,7 @@ class TestAccountAPI(UserAPITestCase):
         self.assertEqual([{"code": "en"}], data["language_proficiencies"])
         self.assertEqual("Tired mother of twins", data["bio"])
         self.assertEqual(account_privacy, data["account_privacy"])
-        if badges_enabled:
-            self.assertEqual(3, len(data['badges']))
-        else:
-            self.assertEqual(False, data['badges'])
+        self.assertEqual(badges_enabled, data['has_accomplishments'])
 
     def _verify_private_account_response(self, response, requires_parental_consent=False, account_privacy=None):
         """
@@ -334,7 +331,7 @@ class TestAccountAPI(UserAPITestCase):
             self.assertEqual([], data["language_proficiencies"])
             self.assertEqual(PRIVATE_VISIBILITY, data["account_privacy"])
             # Badges aren't on by default, so should not be present.
-            self.assertEqual(False, data["badges"])
+            self.assertEqual(False, data["has_accomplishments"])
 
         self.client.login(username=self.user.username, password=self.test_password)
         verify_get_own_information()
