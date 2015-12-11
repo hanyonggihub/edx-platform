@@ -83,7 +83,6 @@
                     gettext('Activating an item in this group will spool the video to the corresponding time point. To skip transcript, go to previous item.'),
                     '">',
                     '<ol id="transcript-captions" class="subtitles-menu">',
-                        '<li></li>',
                     '</ol>',
                 '</div>'
             ].join(''),
@@ -120,7 +119,7 @@
 
                 this.loaded = false;
                 this.subtitlesEl = $(this.template);
-                this.subtitlesMenu = this.subtitlesEl.find('.subtitles-menu');
+                this.subtitlesMenuEl = this.subtitlesEl.find('.subtitles-menu');
                 this.container = $(this.langTemplate);
                 this.captionControlEl = this.container.find('.toggle-captions');
                 this.captionDisplayEl = this.state.el.find('.closed-captions');
@@ -154,7 +153,7 @@
                     click: this.toggle,
                     keydown: this.handleTranscriptToggle
                 });
-                this.subtitlesMenu.on({
+                this.subtitlesMenuEl.on({
                     mouseenter: this.onMouseEnter,
                     mouseleave: this.onMouseLeave,
                     mousemove: this.onMovement,
@@ -190,7 +189,7 @@
                     });
 
                 if ((state.videoType === 'html5') && (state.config.autohideHtml5)) {
-                    this.subtitlesMenu.on('scroll', state.videoControl.showControls);
+                    this.subtitlesMenuEl.on('scroll', state.videoControl.showControls);
                 }
             },
 
@@ -309,13 +308,13 @@
                 if (index === 0) {
                     this.languageChooserEl
                         .find('.control-lang').last()
-                            .focus();
+                        .focus();
                 } else {
                     this.languageChooserEl
                         .find('li:eq(' + index + ')')
                         .prev()
                             .find('.control-lang')
-                                .focus();
+                            .focus();
                 }
 
                 return false;
@@ -751,9 +750,9 @@
                 };
 
                 this.rendered = false;
-                this.subtitlesMenu.empty();
+                this.subtitlesMenuEl.empty();
                 this.setSubtitlesHeight();
-                this.buildCaptions(this.subtitlesMenu, start, captions).done(onRender);
+                this.buildCaptions(this.subtitlesMenuEl, start, captions).done(onRender);
             },
 
             /**
@@ -763,7 +762,7 @@
             */
             addPaddings: function () {
 
-                this.subtitlesMenu
+                this.subtitlesMenuEl
                     .prepend(
                         $('<li class="spacing">')
                             .height(this.topSpacingHeight())

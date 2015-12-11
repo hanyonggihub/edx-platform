@@ -173,7 +173,7 @@
                         return $.Event('keydown', { keyCode: key });
                     };
 
-                    it('toggle the captions on control click', function() {
+                    it('toggles the captions on control click', function() {
                         state = jasmine.initializePlayer();
 
                         $('.toggle-captions').click();
@@ -417,9 +417,8 @@
                 });
 
                 it('show explanation message', function () {
-                    expect($('.subtitles li')).toHaveHtml(
-                        'Caption will be displayed when you start playing ' +
-                        'the video.'
+                    expect($('.closed-captions')).toHaveHtml(
+                        '(Caption will be displayed when you start playing the video.)'
                     );
                 });
 
