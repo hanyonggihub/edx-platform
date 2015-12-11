@@ -1010,7 +1010,7 @@ def _credit_course_requirements(course_key, student):
     if not (settings.FEATURES.get("ENABLE_CREDIT_ELIGIBILITY", False) and is_credit_course(course_key)):
         return None
 
-    # If student is not enrolled as a credit mode, short-circuit and return None. This indicates that
+    # If student is enrolled as a honor mode, short-circuit and return None. This indicates that
     # credit requirements should NOT be displayed on the progress page.
     enrollment = CourseEnrollment.get_enrollment(student, course_key)
     if enrollment.mode == CourseMode.HONOR:
