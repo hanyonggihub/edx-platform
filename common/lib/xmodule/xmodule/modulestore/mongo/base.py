@@ -1064,7 +1064,7 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
                     course_query[key] = re.compile(r"(?i)^{}$".format(course_query[key]))
         else:
             course_query = {'_id': location.to_deprecated_son()}
-        course = self.collection.find_one(course_query)
+        course = self.collection.find_one(course_query, projection={'_id': True})
         if course:
             return SlashSeparatedCourseKey(course['_id']['org'], course['_id']['course'], course['_id']['name'])
         else:
@@ -1225,7 +1225,7 @@ class MongoModuleStore(ModuleStoreDraftAndPublished, ModuleStoreWriteBase, Mongo
             ('_id.course', re.compile(u'^{}$'.format(course_id.course), re.IGNORECASE)),
             ('_id.category', 'course'),
         ])
-        courses = self.collection.find(course_search_location)
+        courses = self.collection.find(course_search_location, projection={'_id': True})
         if courses.count() > 0:
             raise DuplicateCourseError(course_id, courses[0]['_id'])
 
