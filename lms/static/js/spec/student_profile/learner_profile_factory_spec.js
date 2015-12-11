@@ -63,28 +63,29 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
             });
 
             it("doesn't show the mode toggle if badges are disabled", function() {
-                var context = createProfilePage(true, {badges: false}),
+
+                var context = createProfilePage(true, {has_accomplishments: false}),
                     modeToggleView = context.learnerProfileView.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeHidden(modeToggleView);
             });
 
             it("renders the mode toggle if there are badges", function() {
-                var context = createProfilePage(true, {badges: LearnerProfileHelpers.exampleBadges}),
+                var context = createProfilePage(true, {has_accomplishments: true}),
                     modeToggleView = context.learnerProfileView.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeShown(modeToggleView);
             });
 
             it("renders the mode toggle if badges enabled but none exist", function() {
-                var context = createProfilePage(true, {badges: []}),
+                var context = createProfilePage(true, {has_accomplishments: true}),
                     modeToggleView = context.learnerProfileView.modeToggleView;
 
                 LearnerProfileHelpers.expectModeToggleToBeShown(modeToggleView);
             });
 
             it("displays the badges when the accomplishments toggle is selected", function () {
-                var context = createProfilePage(true, {badges: LearnerProfileHelpers.exampleBadges}),
+                var context = createProfilePage(true, {has_accomplishments: true}),
                     learnerProfileView = context.learnerProfileView,
                     modeToggleView = learnerProfileView.modeToggleView,
                     badgeListingView = context.badgeListingView;
@@ -97,7 +98,7 @@ define(['backbone', 'jquery', 'underscore', 'common/js/spec_helpers/ajax_helpers
             });
 
             it("displays a placeholder when the accomplishments toggle is selected and no badges exist", function () {
-                var context = createProfilePage(true, {badges: []}),
+                var context = createProfilePage(true, {has_accomplishments:true}),
                     learnerProfileView = context.learnerProfileView,
                     modeToggleView = context.learnerProfileView.modeToggleView,
                     badgeListingView = context.badgeListingView;

@@ -168,7 +168,7 @@ define(['underscore'], function(_) {
             },
             "image_url": "http://example.com/image.png",
             "assertion_url": "http://example.com/example.json",
-            "created_at": "2015-12-03T16:25:59.316850Z"
+            "created": "2015-12-03T16:25:59.316850Z"
     }];
 
     return {
