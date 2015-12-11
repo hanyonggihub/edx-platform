@@ -57,7 +57,7 @@ class UserReadOnlySerializer(serializers.Serializer):
         self.custom_fields = kwargs.pop('custom_fields', [])
 
         # Don't pass excluded arg up to the superclass
-        self.excluded_fields = kwargs.pop('excluded_fields', None)
+        self.excluded_fields = kwargs.pop('excluded_fields', [])
 
         super(UserReadOnlySerializer, self).__init__(*args, **kwargs)
 
