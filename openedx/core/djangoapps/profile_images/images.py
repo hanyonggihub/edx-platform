@@ -85,12 +85,16 @@ def validate_uploaded_image(uploaded_file):
     if uploaded_file.size > settings.PROFILE_IMAGE_MAX_BYTES:
         file_upload_too_large = _(
             u'The file must be smaller than {image_max_size} in size.'
-        ).format(image_max_size=user_friendly_size(settings.PROFILE_IMAGE_MAX_BYTES)
+        ).format(
+            image_max_size=user_friendly_size(settings.PROFILE_IMAGE_MAX_BYTES)
+        )
         raise ImageValidationError(file_upload_too_large)
     elif uploaded_file.size < settings.PROFILE_IMAGE_MIN_BYTES:
         file_upload_too_small = _(
             u'The file must be at least {image_min_size} in size.'
-        ).format(image_min_size=user_friendly_size(settings.PROFILE_IMAGE_MIN_BYTES)
+        ).format(
+            image_min_size=user_friendly_size(settings.PROFILE_IMAGE_MIN_BYTES)
+        )
         raise ImageValidationError(file_upload_too_small)
 
     # check the file extension looks acceptable
