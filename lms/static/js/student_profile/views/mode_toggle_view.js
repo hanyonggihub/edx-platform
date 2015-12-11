@@ -22,9 +22,7 @@
                 },
                 setToggle: function() {
                     var target = this.$el.find('[data-section="' + this.options.activeSection + '"]');
-                    console.log(this.$el.attr('id'));
                     this.$el.find('*').removeClass('is-active');
-                    console.log(this.$el.attr('id'));
                     target.addClass('is-active');
                     this.hideSections();
                     $(this.options.activeSection).show();
