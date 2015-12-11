@@ -133,6 +133,26 @@ class ProgressPageCreditRequirementsTest(ModuleStoreTestCase):
         )
         self.assertContains(response, "Verification Failed")
 
+    def test_credit_requirements_honor_enrollment(self):
+        # Test the progress table is not displayed to the honor students.
+        credit_api.set_credit_requirement_status(
+            self.user.username, self.course.id,
+            "reverification", "midterm",
+            status="failed", reason={}
+        )
+        self.enrollment.mode = 'honor'
+        self.enrollment.save()
+
+        # Check the progress page display
+        response = self._get_progress_page()
+        self.assertNotContains(response, self.MIN_GRADE_REQ_DISPLAY)
+        self.assertNotContains(response, self.VERIFICATION_REQ_DISPLAY)
+        self.assertNotContains(
+            response,
+            "{}, you are no longer eligible for credit in this course.".format(self.USER_FULL_NAME)
+        )
+        self.assertNotContains(response, "Verification Failed")
+
     def _get_progress_page(self):
         """Load the progress page for the course the user is enrolled in. """
         url = reverse("progress", kwargs={"course_id": unicode(self.course.id)})
