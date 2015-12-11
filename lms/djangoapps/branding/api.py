@@ -22,7 +22,7 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from microsite_configuration import microsite
 from edxmako.shortcuts import marketing_link
 from branding.models import BrandingApiConfig
-
+from . import get_logo_url
 
 log = logging.getLogger("edx.footer")
 
@@ -329,3 +329,41 @@ def _absolute_url_staticfile(is_secure, name):
     # For local development, the returned URL will be relative,
     # so we need to make it absolute.
     return _absolute_url(is_secure, url_path)
+
+
+def get_branding_links():
+    """
+    Return links customized according to site branding.
+    Returned dict will have the following key-value pairs
+        1. logo: logo url for the site
+        2. base_url: Base/Home URL of the site
+
+    Returned dict may have following key-value pairs depending upon misrosite configurations.
+         1.  terms_of_service_and_honor_code: Terms of service and honor code URL
+         2.  privacy_policy: Privacy Policy URL
+         3.  accessibility_policy: Accessibility Policy URL
+         4.  terms_of_service: Terms of Service URl
+         5.  honor_code: Honor Code URL
+         6.  about
+         7.  blog
+         8.  news
+         9.  help-center
+         10. contact
+         11. careers
+         12. donate
+         13. sitemap
+
+    :return:
+    """
+
+    legal_links = {item['name']: item['url'] for item in _footer_legal_links()}
+    footer_navigation_links = {item['name']: item['url'] for item in _footer_navigation_links()}
+
+    links = dict(
+        logo=get_logo_url(),
+        base_url=_absolute_url(True, ""),
+        **legal_links
+    )
+    links.update(footer_navigation_links)
+
+    return links

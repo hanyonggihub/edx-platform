@@ -27,7 +27,7 @@ from certificates.models import (
     CertificateTemplate,
 )
 from certificates.queue import XQueueCertInterface
-
+from branding import api as branding_api
 
 log = logging.getLogger("edx.certificate")
 
@@ -452,3 +452,35 @@ def emit_certificate_event(event_name, user, course_id, course=None, event_data=
 
     with tracker.get_tracker().context(event_name, context):
         tracker.emit(event_name, event_data)
+
+
+def get_certificate_header():
+    """
+    Return data to be used in Certificate Header,
+    data returned should be customized according to the microsite settings
+    """
+    urls = branding_api.get_branding_links()
+
+    data = dict(
+        logo_src=urls['logo'],
+        logo_url=urls['base_url']
+    )
+
+    return data
+
+
+def get_certificate_footer():
+    """
+    Return data to be used in Certificate Footer,
+    data returned should be customized according to the microsite settings
+    """
+    urls = branding_api.get_branding_links()
+    data = dict()
+
+    if "terms_of_service_and_honor_code" in urls:
+        data.update({'company_tos_url': urls['terms_of_service_and_honor_code']})
+    if "privacy_policy" in urls:
+        data.update({'company_privacy_url': urls['privacy_policy']})
+    if "about" in urls:
+        data.update({'company_about_url': urls['about']})
+    return data
