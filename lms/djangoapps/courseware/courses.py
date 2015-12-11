@@ -373,7 +373,7 @@ def get_course_syllabus_section(course, section_key):
     raise KeyError("Invalid about key " + str(section_key))
 
 
-def get_courses(user, domain=None):
+def get_courses(user):
     '''
     Returns a list of courses available, sorted by course.number
     '''
