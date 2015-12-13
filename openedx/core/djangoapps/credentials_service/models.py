@@ -216,7 +216,11 @@ class CourseCertificate(AbstractCertificate):
         max_length=255,
         choices=MODE_CHOICES
     )
-    user_credentials = GenericRelation(UserCredential)
+    user_credentials = GenericRelation(
+        UserCredential,
+        content_type_field='credential_content_type',
+        object_id_field='credential_id'
+    )
 
     class Meta(object):
         unique_together = (('course_id', 'certificate_type', 'site'),)
@@ -234,7 +238,11 @@ class ProgramCertificate(AbstractCertificate):
     Configuration for Program Certificates.
     """
     program_id = models.PositiveIntegerField(db_index=True, unique=True)
-    user_credentials = GenericRelation(UserCredential)
+    user_credentials = GenericRelation(
+        UserCredential,
+        content_type_field='credential_content_type',
+        object_id_field='credential_id'
+    )
 
     def __unicode__(self):
         """Unicode representation. """
