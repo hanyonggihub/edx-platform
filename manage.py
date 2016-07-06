@@ -1,3 +1,4 @@
+# ^6666666666666666666666666666666666
 #!/usr/bin/env python
 """
 Usage: manage.py {lms|cms} [--settings env] ...
